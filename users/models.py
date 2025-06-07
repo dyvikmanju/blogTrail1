@@ -11,20 +11,11 @@ import cloudinary.uploader
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = CloudinaryField('image', default='media/default_nhoexz.jpg')
-
-    def save(self, *args, **kwargs):
-        # Only upload if image is a new local file, not a public ID
-        if self.image and hasattr(self.image, 'file'):
-            upload_result = cloudinary.uploader.upload(
-                self.image,
-                folder='media/profile_pics'
-            )
-            self.image = upload_result['public_id']
-        super().save(*args, **kwargs)
+    image = CloudinaryField('image', default='default_nhoexz')  # no folder prefix
 
     def __str__(self):
         return f'{self.user.username} Profile'
+
 
     # def save(self,*args, **kwargs):
     #     super().save(*args, **kwargs)
