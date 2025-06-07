@@ -11,7 +11,8 @@ import cloudinary.uploader
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = CloudinaryField('image', default='default_nhoexz')  # no folder prefix
+    image = CloudinaryField('image', default='Screenshot_2025-06-05_094214_u0kkry')
+  # no folder prefix
 
     def __str__(self):
         return f'{self.user.username} Profile'
