@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -144,13 +148,25 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUD_STORAGE_BUCKET_NAME'),
+    api_key=os.environ.get('CLOUD_ACCESS_KEY'),
+    api_secret=os.environ.get('CLOUD_SECRET_ACCESS_KEY'),
+    secure=True
+)
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUD_STORAGE_BUCKET_NAME'),
     'API_KEY': os.environ.get('CLOUD_ACCESS_KEY'),
     'API_SECRET': os.environ.get('CLOUD_SECRET_ACCESS_KEY')
 }
-print(os.environ.get('CLOUD_STORAGE_BUCKET_NAME'))
-print(os.environ.get('CLOUD_SECRET_ACCESS_KEY'))
-print(os.environ.get('CLOUD_ACCESS_KEY'))
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+}
+

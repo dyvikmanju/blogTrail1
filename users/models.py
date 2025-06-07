@@ -1,11 +1,27 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+from cloudinary.models import CloudinaryField
 
+
+from django.db import models
+from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
+import cloudinary.uploader
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    image = CloudinaryField('image', default='media/default_nhoexz.jpg')
+
+    def save(self, *args, **kwargs):
+        # Only upload if image is a new local file, not a public ID
+        if self.image and hasattr(self.image, 'file'):
+            upload_result = cloudinary.uploader.upload(
+                self.image,
+                folder='media/profile_pics'
+            )
+            self.image = upload_result['public_id']
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user.username} Profile'
