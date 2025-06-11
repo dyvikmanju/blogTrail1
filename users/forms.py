@@ -21,6 +21,12 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
+    image = forms.ImageField(
+        required=False,
+        label="Update Profile Pic",  # ✅ Custom label
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+    )
+
     class Meta:
         model = Profile
         fields = ['image']
